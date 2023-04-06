@@ -10,9 +10,9 @@ const db = mysql.createConnection(
         user: 'root',
         // MySQL password
         password: process.env.MY_SQL_PASSWORD,
-        database: 'classlist_db'
+        database: 'employeetracker_db'
     },
-    console.log(`Connected to the classlist_db database.`)
+    console.log(`Connected to the emplyeeTracker_db database.`)
 );
 // check the database connection and program starts if there are no errors
 db.connect((err) => {
