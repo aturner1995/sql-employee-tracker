@@ -12,7 +12,7 @@ const db = mysql.createConnection(
         password: process.env.MY_SQL_PASSWORD,
         database: 'employeetracker_db'
     },
-    console.log(`Connected to the emplyeeTracker_db database.`)
+    console.log(`Connected to the emplyeetracker_db database.`)
 );
 // check the database connection and program starts if there are no errors
 db.connect((err) => {
@@ -37,7 +37,7 @@ const startPrompt = () => {
                 'Exit'
             ]
         },
-    ]).then(function (answer) {
+    ]).then((answer) => {
         switch (answer.initialPrompt) {
             case 'View all departments':
                 // Call a function to handle viewing all departments
@@ -69,9 +69,8 @@ const startPrompt = () => {
                 break;
             case 'Exit':
                 // End the connection and exit the application
-                connection.end();
+                db.end();
                 process.exit();
-                break;
         }
     })
         .catch((err) => {
@@ -80,27 +79,113 @@ const startPrompt = () => {
 };
 
 const viewDepartments = () => {
-
+    db.query(`SELECT * FROM departments`, (err,results) => {
+        console.table(results);
+        startPrompt();
+    })
 };
 
 const viewRoles = () => {
-
+    db.query(`SELECT * FROM roles`, (err,results) => {
+        console.table(results);
+        startPrompt();
+    })
 };
 
 const viewEmployees = () => {
-
+    db.query(`SELECT * FROM employee`, (err,results) => {
+        console.table(results);
+        startPrompt();
+    })
 };
 
 const addDepartment = () => {
-
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'Please provide the name of the new department:',
+            name: 'newDepartment'
+        }
+    ]).then((answer) => {
+        db.query(`INSERT INTO departments (name) VALUES ('${answer.newDepartment}')`)
+    }).then(() => {
+        console.log('Department Added');
+        startPrompt();
+    })
+    .catch((err) => {
+        if (err.code === 'ER_DUP_ENTRY') {
+            console.log('ERROR: Department Already Exists');
+        }
+        else {
+            console.log(err);
+        }
+        startPrompt();
+    });
 };
 
 const addRole = () => {
-
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'Please provide the title of the new role:',
+            name: 'newRoleTitle'
+        },
+        {
+            type: 'input',
+            message: 'Please provide the salary of the new role:',
+            name: 'newRoleSalary'
+        },
+        {
+            type: 'input',
+            message: 'Please provide the department ID of the new role:',
+            name: 'newRoleDeptId'
+        },
+    ]).then((answer) => {
+        db.query(`INSERT INTO roles (name) VALUES 
+        ('${answer.newDepartment}', ${answer.newRoleSalary}, ${answer.newRoleDeptId})`)
+    }).then(() => {
+        console.log('New Role Added');
+        startPrompt();
+    })
+    .catch((err) => {
+        console.log(err);
+        startPrompt();
+    });
 };
 
 const addEmployee= () => {
-
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'Please provide the employee first name:',
+            name: 'firstName'
+        },
+        {
+            type: 'input',
+            message: 'Please provide the employee last name:',
+            name: 'lastName'
+        },
+        {
+            type: 'input',
+            message: 'Please provide the employee role ID:',
+            name: 'roleId'
+        },
+        {
+            type: 'input',
+            message: 'Please provide the employee manager ID:',
+            name: 'managerId'
+        },
+    ]).then((answer) => {
+        db.query(`INSERT INTO roles (name) VALUES 
+        ('${answer.firstName}', '${answer.lastName}', ${answer.roleId}, ${answer.managerId})`)
+    }).then(() => {
+        console.log('New Role Added');
+        startPrompt();
+    })
+    .catch((err) => {
+        console.log(err);
+        startPrompt();
+    });
 };
 
 const updateEmployeeRole = () => {
