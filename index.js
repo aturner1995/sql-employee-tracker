@@ -1,6 +1,7 @@
 const mysql = require('mysql2');
 const table = require('console.table');
 const inquirer = require('inquirer');
+var figlet = require('figlet');
 require('dotenv').config();
 
 const {viewDepartments, viewEmployees, viewRoles} = require('./lib/view.js');
@@ -21,7 +22,7 @@ const db = mysql.createConnection(
 // check the database connection and program starts if there are no errors
 db.connect((err) => {
     if (err) throw err;
-    startPrompt();
+    figletArt();
 });
 
 const startPrompt = () => {
@@ -73,13 +74,25 @@ const startPrompt = () => {
                 break;
             case 'Exit':
                 // End the connection and exit the application
+                console.log('Goodbye!');
                 db.end();
                 process.exit();
+
         }
     })
         .catch((err) => {
             console.log(err);
         })
 };
+
+const figletArt = () => {figlet('Employee Tracker', (err, data) => {
+    if (err) {
+        console.log('Something went wrong...');
+        console.dir(err);
+        return;
+    }
+    console.log(data)
+    startPrompt();
+})}
 
 
