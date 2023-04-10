@@ -18,6 +18,8 @@ clone or fork the repo and run npm install + node index.js
 
 ## Usage ⚙️
 * To run the program - node index.js
+![image](https://user-images.githubusercontent.com/120421650/230786881-ceb349eb-180d-4d5d-9780-73411bc52e08.png)
+* Watch Instructional Video - https://user-images.githubusercontent.com/120421650/230786856-db6935be-5acf-44a3-afad-ea607c59354a.mp4
 
 ## Contribution 🙏
 Please email the repo user for instructions
