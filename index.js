@@ -4,10 +4,11 @@ const inquirer = require('inquirer');
 var figlet = require('figlet');
 require('dotenv').config();
 
-const {viewDepartments, viewEmployees, viewRoles} = require('./lib/view.js');
-const {addRole, addDepartment, addEmployee} = require('./lib/add.js');
-const updateEmployeeRole = require('./lib/update.js');
-    
+const { viewDepartments, viewEmployees, viewRoles, viewEmployeesByManager, viewEmployeesByDepartment, viewDepartmentBudget } = require('./lib/view.js');
+const { addRole, addDepartment, addEmployee, addManager } = require('./lib/add.js');
+const { updateEmployeeRole, updateEmployeeManager } = require('./lib/update.js');
+const { deleteEmployee, deleteDepartment, deleteRole } = require('./lib/delete.js');
+
 const db = mysql.createConnection(
     {
         host: 'localhost',
@@ -35,10 +36,18 @@ const startPrompt = () => {
             choices: ['View all departments',
                 'View all roles',
                 'View all employees',
+                'View employees by Manager',
+                'View employees by department',
+                'View department budget',
                 'Add a department',
                 'Add a role',
                 'Add an employee',
+                'Add a Manager',
                 'Update an employee role',
+                'Update an employee Manager',
+                'Delete a department',
+                'Delete a role',
+                'Delete an employee',
                 'Exit'
             ]
         },
@@ -46,31 +55,63 @@ const startPrompt = () => {
         switch (answer.initialPrompt) {
             case 'View all departments':
                 // Call a function to handle viewing all departments
-                viewDepartments(db,startPrompt);
+                viewDepartments(db, startPrompt);
                 break;
             case 'View all roles':
                 // Call a function to handle viewing all roles
-                viewRoles(db,startPrompt);
+                viewRoles(db, startPrompt);
                 break;
             case 'View all employees':
                 // Call a function to handle viewing all employees
-                viewEmployees(db,startPrompt);
+                viewEmployees(db, startPrompt);
+                break;
+            case 'View employees by Manager':
+                // Call a function to handle viewing all employees by role
+                viewEmployeesByManager(db, startPrompt);
+                break;
+            case 'View employees by department':
+                // Call a function to handle viewing all employees by dept
+                viewEmployeesByDepartment(db, startPrompt);
+                break;
+            case 'View department budget':
+                // Call a function to handle viewing all employees by dept
+                viewDepartmentBudget(db, startPrompt);
                 break;
             case 'Add a department':
                 // Call a function to handle adding a department
-                addDepartment(db,startPrompt);
+                addDepartment(db, startPrompt);
                 break;
             case 'Add a role':
                 // Call a function to handle adding a role
-                addRole(db,startPrompt);
+                addRole(db, startPrompt);
                 break;
             case 'Add an employee':
                 // Call a function to handle adding an employee
-                addEmployee(db,startPrompt);
+                addEmployee(db, startPrompt);
+                break;
+            case 'Add a Manager':
+                // Call a function to add a manager
+                addManager(db, startPrompt);
                 break;
             case 'Update an employee role':
                 // Call a function to handle updating an employee's role
-                updateEmployeeRole(db,startPrompt);
+                updateEmployeeRole(db, startPrompt);
+                break;
+            case 'Update an employee Manager':
+                // Call a function to handle updating an employee's manager
+                updateEmployeeManager(db, startPrompt);
+                break;
+            case 'Delete a department':
+                // Call a function to handle deleting dept
+                deleteDepartment(db, startPrompt);
+                break;
+            case 'Delete a role':
+                // Call a function to handle deleting a role
+                deleteRole(db, startPrompt);
+                break;
+            case 'Delete an employee':
+                // Call a function to handle deleting an employee
+                deleteEmployee(db, startPrompt);
                 break;
             case 'Exit':
                 // End the connection and exit the application
@@ -85,14 +126,16 @@ const startPrompt = () => {
         })
 };
 
-const figletArt = () => {figlet('Employee Tracker', (err, data) => {
-    if (err) {
-        console.log('Something went wrong...');
-        console.dir(err);
-        return;
-    }
-    console.log(data)
-    startPrompt();
-})}
+const figletArt = () => {
+    figlet('Employee Tracker', (err, data) => {
+        if (err) {
+            console.log('Something went wrong...');
+            console.dir(err);
+            return;
+        }
+        console.log(data)
+        startPrompt();
+    })
+}
 
 
